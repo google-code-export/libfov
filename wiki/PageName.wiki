@@ -1,0 +1,43 @@
+#summary Home page.
+
+= libfov =
+
+== About ==
+
+libfov is a C library for calculating fields of view and lighting on low resolution rasters, suitable for roguelike games. In that screenshot below, imagine that green dot is your character in a computer game, and as you walk around (move between tiles on the grid), you want to know which tiles you can see and which tiles you cannot. libfov calculates exactly that.
+
+It can also be used to calculate which tiles are lit from a light source (the fov source doesn't have to be your eyesight, it can be a lightbulb). libfov supports beams, so you can use it to do nice directed lighting effects such as torch/flashlight lights.
+
+libfov is fairly flexible in its design. It does not impose a map data structure on you. It operates via a couple of callbacks. It leaves enough room for you to decide what you want to do with the algorithm. You could conceivably use it in a real-time grid-based game with flickering multicoloured torches hanging off the walls, or you could use it behind the scenes to decide that a monster can see you, without displaying it on the screen.
+
+== Screenshots ==
+
+http://libfov.sourceforge.net/wiki/images/1/1d/Libfov-1.png
+
+== License ==
+
+[http://www.opensource.org/licenses/mit-license.php MIT license]
+
+== Getting libfov ==
+
+=== Source ===
+
+http://sourceforge.net/projects/libfov
+
+ ./configure && make
+
+From here, you can 'make install' to make libfov available on your system globally, or you can link against libfov.a or fov.o. It won't increase your binary size much (it's a tiny C library) and doing so reduces your runtime dependencies. Using 'make install' plus static linking is probably easiest.
+
+=== FreeBSD/Ports ===
+
+* http://www.freebsdports.info/ports/games/libfov.html
+* http://www.freshports.org/games/libfov
+
+== Using libfov ==
+
+* [http://libfov.sourceforge.net/api API]
+* [FAQ]
+
+== Projects Using libfov ==
+
+* [http://www.netikka.net/joyr/obdur/index.html Opdur]
