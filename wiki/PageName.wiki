@@ -1,5 +1,3 @@
-#summary Home page.
-
 = libfov =
 
 == About ==
@@ -12,7 +10,7 @@ libfov is fairly flexible in its design. It does not impose a map data structure
 
 == Screenshots ==
 
-http://libfov.sourceforge.net/wiki/images/1/1d/Libfov-1.png
+[http://libfov.sourceforge.net/wiki/images/1/1d/Libfov-1.png]
 
 == License ==
 
@@ -24,22 +22,24 @@ http://libfov.sourceforge.net/wiki/images/1/1d/Libfov-1.png
 
 http://sourceforge.net/projects/libfov
 
- ./configure && make
+{{{
+./configure && make
+}}}
 
 From here, you can 'make install' to make libfov available on your system globally, or you can link against libfov.a or fov.o. It won't increase your binary size much (it's a tiny C library) and doing so reduces your runtime dependencies. Using 'make install' plus static linking is probably easiest.
 
 === FreeBSD/Ports ===
 
-* http://www.freebsdports.info/ports/games/libfov.html
-* http://www.freshports.org/games/libfov
+  * [http://www.freebsdports.info/ports/games/libfov.html]
+  * [http://www.freshports.org/games/libfov]
 
 == Using libfov ==
 
-* [http://libfov.sourceforge.net/api API]
+  * [http://libfov.sourceforge.net/api API]
 
 == Projects Using libfov ==
 
-* [http://www.netikka.net/joyr/obdur/index.html Opdur]
+  * [http://www.netikka.net/joyr/obdur/index.html Opdur]
 
 == FAQ ==
 
