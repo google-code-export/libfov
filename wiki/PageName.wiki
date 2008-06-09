@@ -61,7 +61,7 @@ You define these yourself, pass them into any libfov functions that ask for them
 
 === The example (simple.cc) seems to give libfov instances of C++ classes... but how can a C lib accept a C++ class? ===
 
-You're right, you can't pass a C++ object to a C library but you <em>can</em> pass a pointer to a C++ object to a C library as long as that C library does not know about the C++ class (i.e. uses void rather than a class), does not try to dereference the pointer, cast the pointer, or do anything with the data being pointed to. In that case, the pointer is just like an integer. In libfov's case, the pointer is never dereferenced, just passed straight back to your callback, which itself can then cast to a C structure or C++ object pointer (because you're back in your own territory where you know what data type that pointer should be).
+You're right, you can't pass a C++ object to a C library but you _can_ pass a pointer to a C++ object to a C library as long as that C library does not know about the C++ class (i.e. uses void rather than a class), does not try to dereference the pointer, cast the pointer, or do anything with the data being pointed to. In that case, the pointer is just like an integer. In libfov's case, the pointer is never dereferenced, just passed straight back to your callback, which itself can then cast to a C structure or C++ object pointer (because you're back in your own territory where you know what data type that pointer should be).
 
 === Can we please have a Visual C++ example? ===
 
