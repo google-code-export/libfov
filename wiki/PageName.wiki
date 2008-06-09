@@ -45,9 +45,9 @@ From here, you can 'make install' to make libfov available on your system global
 
 === What are these strange {{{void *map}}} and {{{void *source}}} I keep seeing? ===
 
-void *map is a pointer to your map data. In C, this should be an instance of a C struct you define. In C++, this can be an object.
+{{{void *map}}} is a pointer to your map data. In C, this should be an instance of a C struct you define. In C++, this can be an object.
 
-void *source is a pointer to information about the light source. Again, in C, this should be an instance of a C struct you define. In C++, this can be an object. For instance, the light source might hold information about the colour or strength or intensity of the light. You need to know this information in your "apply" callback if you want to do several fancy types of lighting such as coloured lights, flickering torches or variable intensity lights.
+{{{void *source}}} is a pointer to information about the light source. Again, in C, this should be an instance of a C struct you define. In C++, this can be an object. For instance, the light source might hold information about the colour or strength or intensity of the light. You need to know this information in your "apply" callback if you want to do several fancy types of lighting such as coloured lights, flickering torches or variable intensity lights.
 
 These pointers are not used by the library itself, except to pass back to your callback functions so that you can use the information to decide whether a particular tile is opaque and how to apply lighting to it. You should define your own map data structure.
 
