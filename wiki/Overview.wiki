@@ -13,7 +13,7 @@ libfov is fairly flexible in its design. It does not impose a map data structure
 
 == Screenshots ==
 
-[http://libfov.sourceforge.net/wiki/images/1/1d/Libfov-1.png]
+[http://libfov.googlecode.com/svn/wiki/screenshots/libfov-1.0.3-demo.png]
 
 == License ==
 
