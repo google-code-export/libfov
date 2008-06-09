@@ -405,6 +405,7 @@ void fov_beam(fov_settings_type *settings, void *map, void *source,
         return;
     } else if (angle >= 360.0f) {
         _fov_circle(&data);
+        return;
     }
 
     /* Calculate the angle as a percentage of 45 degrees, halved (for
