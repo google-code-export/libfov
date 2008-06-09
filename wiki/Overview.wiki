@@ -45,6 +45,6 @@ From here, you can {{{sudo make install}}} to make libfov available on your syst
 
 == Projects Using libfov ==
 
-  * [http://www.netikka.net/joyr/obdur/index.html Opdur]
-  * [http://nornagon.net/darcsweb.cgi?r=torch;a=summary Torch]
+  * [http://www.netikka.net/joyr/obdur/index.html Opdur] A roguelike game.
+  * [http://nornagon.net/darcsweb.cgi?r=torch;a=summary Torch] A libfov tech demo for the NDS.
   * [http://nornagon.net/darcsweb.cgi?r=hfov;a=summary hfov] Haskell bindings for libfov.
