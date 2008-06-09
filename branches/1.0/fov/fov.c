@@ -81,6 +81,7 @@ void fov_settings_init(fov_settings_type *settings) {
     settings->opaque_apply = FOV_OPAQUE_APPLY;
     settings->opaque = NULL;
     settings->apply = NULL;
+    settings->heights = NULL;
     settings->numheights = 0;
 }
 
