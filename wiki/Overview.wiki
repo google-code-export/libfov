@@ -15,6 +15,8 @@ libfov is fairly flexible in its design. It does not impose a map data structure
 
 [http://libfov.googlecode.com/svn/wiki/screenshots/libfov-1.0.3-demo.png]
 
+libfov 1.0.3 SDL Demo
+
 == License ==
 
 [http://www.opensource.org/licenses/mit-license.php MIT license]
