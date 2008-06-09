@@ -56,8 +56,8 @@ If you do not care about light sources because you are using libfov to calculate
 === Are the 'map data structure' and 'source data structure' structs? Where are they defined? ===
 
 You define these yourself, pass them into any libfov functions that ask for them, and libfov will make sure it passes them back to you when it knows you'll need them - i.e. in your callbacks. This mechanism, although slightly tricky at first,
-* avoids nasty global variables and
-* gives you the liberty of defining your own data structures to suit your own needs.
+  * avoids nasty global variables and
+  * gives you the liberty of defining your own data structures to suit your own needs.
 
 === The example (simple.cc) seems to give libfov instances of C++ classes... but how can a C lib accept a C++ class? ===
 
