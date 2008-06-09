@@ -43,7 +43,7 @@ From here, you can 'make install' to make libfov available on your system global
 
 == FAQ ==
 
-=== What are these strange "void *map" and "void *source" I keep seeing? ===
+=== What are these strange {{{void *map}}} and {{{void *source}}} I keep seeing? ===
 
 void *map is a pointer to your map data. In C, this should be an instance of a C struct you define. In C++, this can be an object.
 
