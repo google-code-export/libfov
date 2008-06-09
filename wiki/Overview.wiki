@@ -23,15 +23,15 @@ libfov 1.0.3 SDL Demo
 
 == Getting libfov ==
 
-=== Source ===
-
-http://sourceforge.net/projects/libfov
+Get the latest version from [http://code.google.com/p/libfov/downloads/list the download section].
 
 {{{
+tar xvzf libfov-x.y.z.tar.gz
+cd libfov-x.y.z
 ./configure && make
 }}}
 
-From here, you can 'make install' to make libfov available on your system globally, or you can link against libfov.a or fov.o. It won't increase your binary size much (it's a tiny C library) and doing so reduces your runtime dependencies. Using 'make install' plus static linking is probably easiest.
+From here, you can {{{sudo make install}}} to make libfov available on your system globally, but it's recommended that you either include fov.c and fov.h in your own build process, or use static linking to reduce the runtime dependencies of your code.
 
 === FreeBSD/Ports ===
 
