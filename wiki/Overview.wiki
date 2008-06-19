@@ -42,6 +42,7 @@ From here, you can {{{sudo make install}}} to make libfov available on your syst
 
   * [http://libfov.sourceforge.net/api API]
   * [FAQ]
+  * [IRC]
 
 == Projects Using libfov ==
 
