@@ -46,7 +46,14 @@ From here, you can {{{sudo make install}}} to make libfov available on your syst
 
 == Projects Using libfov ==
 
-  * [http://www.netikka.net/joyr/obdur/index.html Opdur] A roguelike game.
-  * [http://nornagon.net/darcsweb.cgi?r=torch;a=summary Torch] A libfov tech demo for the NDS.
-  * [http://nornagon.net/darcsweb.cgi?r=hfov;a=summary hfov] Haskell bindings for libfov.
-  * [http://sourceforge.net/projects/templeofzum/ Temple of Zum] A roguelike game.
+[http://www.netikka.net/joyr/obdur/index.html Opdur] A roguelike game.
+
+[http://libfov.googlecode.com/svn/wiki/screenshots/obdur-screenshot-3.png]
+
+[http://nornagon.net/darcsweb.cgi?r=torch;a=summary Torch] A libfov tech demo for the NDS.
+
+[http://libfov.googlecode.com/svn/wiki/screenshots/torch.png]
+
+[http://nornagon.net/darcsweb.cgi?r=hfov;a=summary hfov] Haskell bindings for libfov.
+
+[http://sourceforge.net/projects/templeofzum/ Temple of Zum] A roguelike game.
