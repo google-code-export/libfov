@@ -1,3 +1,4 @@
 #summary IRC channel details
 
-[http://freenode.net/ freenode] channel #libfov
+* Server [http://freenode.net/ freenode]
+* Channel #libfov
