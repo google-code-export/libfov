@@ -57,3 +57,5 @@ From here, you can {{{sudo make install}}} to make libfov available on your syst
 [http://nornagon.net/darcsweb.cgi?r=hfov;a=summary hfov] Haskell bindings for libfov.
 
 [http://sourceforge.net/projects/templeofzum/ Temple of Zum] A roguelike game.
+
+[http://libfov.googlecode.com/svn/wiki/screenshots/toz-screenshot.jpg] 
