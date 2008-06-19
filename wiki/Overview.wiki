@@ -55,6 +55,7 @@ From here, you can {{{sudo make install}}} to make libfov available on your syst
 [http://nornagon.net/darcsweb.cgi?r=torch;a=summary Torch] A libfov tech demo for the NDS.
 
 [http://libfov.googlecode.com/svn/wiki/screenshots/torch.png]
+[http://libfov.googlecode.com/svn/wiki/screenshots/torch6.gif]
 
 ----
 
