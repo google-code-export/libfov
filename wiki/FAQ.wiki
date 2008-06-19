@@ -26,3 +26,8 @@ You're right, you can't pass a C++ object to a C library but you _can_ pass a po
 I do not own a copy of Visual C++, but I am happy to accept any contributions of a Visual C++ project file and a Visual C++ example. I will commit them to libfov's source distribution so people running Visual C++ can get started quicker.
 
 In the long run, I would like to get Visual C++ running in a virtual machine, so I can properly support it, but that's some way off so don't hold your breath.
+
+=== Is there a Java wrapper or version? ===
+
+Check out Egor Tsinko's Java port of libfov:
+  http://code.google.com/p/libfov/source/browse/java
