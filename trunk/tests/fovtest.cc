@@ -40,11 +40,11 @@ namespace std {
 
 struct CountMap {
     CountMap(vector<string> counts);
-    CountMap(unsigned w, unsigned h);
+    CountMap(unsigned w, unsigned h): w(w), h(h), counts(w*h, 0) { }
     void resize(unsigned w, unsigned h);
-    bool operator==(const CountMap& other) const;
-    unsigned value(unsigned x, unsigned y) const;
-    void increment(unsigned x, unsigned y);
+    bool operator==(const CountMap& b) const { return w == b.w && h == b.h && counts == b.counts; }
+    unsigned value(unsigned x, unsigned y) const { return counts[y*w+x]; }
+    void increment(unsigned x, unsigned y) { ++counts[y*w+x]; }
 
     unsigned w;
     unsigned h;
@@ -61,25 +61,7 @@ CountMap::CountMap(vector<string> counts):
     }
 }
 
-CountMap::CountMap(unsigned w, unsigned h):
-    w(w), h(h), counts(w*h, 0) {
-}
-
-unsigned CountMap::value(unsigned x, unsigned y) const {
-    return counts[y*w+x];
-}
-
-void CountMap::increment(unsigned x, unsigned y) {
-    ++counts[y*w+x];
-}
-
-bool CountMap::operator==(const CountMap& b) const
-{
-    return w == b.w && h == b.h && counts == b.counts;
-}
-
-std::ostream& operator<<(std::ostream& out, const CountMap& map)
-{
+std::ostream& operator<<(std::ostream& out, const CountMap& map) {
     for (int j = (int)map.h - 1; j >= 0; --j) {
         for (int i = 0; i < (int)map.w; ++i) {
             char str[2] = { ('0' + map.value(i, j)), '\0' };
