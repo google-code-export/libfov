@@ -164,18 +164,29 @@ static bool opaque_increment(void *map, int x, int y) {
 
 typedef boost::tuple<Map, CountMap, CountMap> BasicCase;
 
+fov_settings_type *new_settings(fov_shape_type shape) {
+    fov_settings_type *settings = new fov_settings_type;
+    fov_settings_init(settings);
+    fov_settings_set_opacity_test_function(settings, opaque_increment);
+    fov_settings_set_apply_lighting_function(settings, apply_increment);
+    fov_settings_set_shape(settings, shape);
+    return settings;
+}
+
+void delete_settings(fov_settings_type *settings) {
+    fov_settings_free(settings);
+    delete settings;
+}
+
+
 void test_count_maps(Map map, 
         CountMap expected_opaque, 
         CountMap expected_apply, 
         int px, int py, unsigned radius, 
         fov_shape_type shape) {
-    fov_settings_type settings;
-    fov_settings_init(&settings);
-    fov_settings_set_opacity_test_function(&settings, opaque_increment);
-    fov_settings_set_apply_lighting_function(&settings, apply_increment);
-    fov_settings_set_shape(&settings, shape);
-    fov_circle(&settings, &map, NULL, px, py, radius);
-    fov_settings_free(&settings);
+    fov_settings_type *settings = new_settings(shape);
+    fov_circle(settings, &map, NULL, px, py, radius);
+    delete_settings(settings);
     BOOST_CHECK(map.opaque_count_map == expected_opaque);
     BOOST_CHECK(map.apply_count_map == expected_apply);
 }
@@ -187,13 +198,9 @@ void test_count_maps_beam(Map map,
         fov_shape_type shape,
         fov_direction_type direction,
         float angle) {
-    fov_settings_type settings;
-    fov_settings_init(&settings);
-    fov_settings_set_opacity_test_function(&settings, opaque_increment);
-    fov_settings_set_apply_lighting_function(&settings, apply_increment);
-    fov_settings_set_shape(&settings, shape);
-    fov_beam(&settings, &map, NULL, px, py, radius, direction, angle);
-    fov_settings_free(&settings);
+    fov_settings_type *settings = new_settings(shape);
+    fov_beam(settings, &map, NULL, px, py, radius, direction, angle);
+    delete_settings(settings);
     BOOST_CHECK(map.opaque_count_map == expected_opaque);
     BOOST_CHECK(map.apply_count_map == expected_apply);
 }
@@ -343,18 +350,14 @@ BOOST_AUTO_TEST_SUITE(test_suite1)
         const int px = 4;
         const int py = 4;
         const unsigned radius = 3;
-        fov_settings_type settings;
-        fov_settings_init(&settings);
-        fov_settings_set_opacity_test_function(&settings, opaque_increment);
-        fov_settings_set_apply_lighting_function(&settings, apply_increment);
-        fov_settings_set_shape(&settings, FOV_SHAPE_SQUARE);
+        fov_settings_type *settings = new_settings(FOV_SHAPE_SQUARE);
         BOOST_FOREACH(BasicCase c, cases) {
             Map &m = get<0>(c);
-            fov_circle(&settings, &m, NULL, px, py, radius);
+            fov_circle(settings, &m, NULL, px, py, radius);
             BOOST_CHECK(m.opaque_count_map == get<1>(c));
             BOOST_CHECK(m.apply_count_map == get<2>(c));
         }
-        fov_settings_free(&settings);
+        delete_settings(settings);
     }
 
     BOOST_AUTO_TEST_CASE(circle) {
@@ -603,25 +606,21 @@ BOOST_AUTO_TEST_SUITE(test_suite1)
         Map map(raster);
         CountMap expected_opaque_count_map(expected_opaque);
         CountMap expected_apply_count_map(expected_apply);
-        fov_settings_type settings;
-        fov_settings_init(&settings);
-        fov_settings_set_opacity_test_function(&settings, opaque_increment);
-        fov_settings_set_apply_lighting_function(&settings, apply_increment);
-        fov_settings_set_shape(&settings, FOV_SHAPE_SQUARE);
+        fov_settings_type *settings = new_settings(FOV_SHAPE_SQUARE);
 
         radius = 20;
-        fov_beam(&settings, &map, NULL, px, py, radius, direction, angle);
+        fov_beam(settings, &map, NULL, px, py, radius, direction, angle);
         BOOST_CHECK(map.opaque_count_map == expected_opaque_count_map);
         BOOST_CHECK(map.apply_count_map == expected_apply_count_map);
 
         // Again with radius++, to cause re-allocation of the heights array.
         radius = 20000;
         map = Map(raster); // reset count maps
-        fov_beam(&settings, &map, NULL, px, py, radius, direction, angle);
+        fov_beam(settings, &map, NULL, px, py, radius, direction, angle);
         BOOST_CHECK(map.opaque_count_map == expected_opaque_count_map);
         BOOST_CHECK(map.apply_count_map == expected_apply_count_map);
 
-        fov_settings_free(&settings);
+        delete_settings(settings);
     }
 
     BOOST_AUTO_TEST_CASE(beam_behind_orthogonal) {
