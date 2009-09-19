@@ -709,7 +709,7 @@ BOOST_AUTO_TEST_SUITE(test_suite1)
             (-1)(-1) ( 0)(-1) ( 1)( 1)
             (-1)( 0) ( 0)( 0) ( 1)( 0)
             (-1)(-1) ( 0)( 0) ( 1)( 1); // dx = 2*(y*w + x), dy = 2*(y*w + x) + 1
-        OffsetMap om(3, 3, expected_offsets);
+        OffsetMap expected_offset_map(3, 3, expected_offsets);
         Map map(raster);
         int px = 1, py = 1;
         unsigned radius = 3;
@@ -720,7 +720,7 @@ BOOST_AUTO_TEST_SUITE(test_suite1)
         fov_circle(&settings, &map, NULL, px, py, radius);
         cout << map.offset_map;
         fov_settings_free(&settings);
-        BOOST_CHECK(map.offset_map == om);
+        BOOST_CHECK(map.offset_map == expected_offset_map);
     }
 
 BOOST_AUTO_TEST_SUITE_END()
