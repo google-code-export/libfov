@@ -15,14 +15,15 @@
 #include <vector>
 #include <fov/fov.h>
 #define BOOST_TEST_MODULE fovtest
-#include <boost/test/included/unit_test.hpp>
-#include <boost/assign/std/vector.hpp>
 #include <boost/assign/list_of.hpp>
+#include <boost/assign/std/vector.hpp>
 #include <boost/foreach.hpp>
+#include <boost/format.hpp>
+#include <boost/test/included/unit_test.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/multi_array.hpp>
 
 using namespace std;
+using namespace boost;
 using namespace boost::assign;
 using namespace boost::tuples;
 
@@ -38,39 +39,54 @@ namespace std {
 
 // -------------------------------------------------
 
-struct CountMap {
-    CountMap(vector<string> counts);
-    CountMap(unsigned w, unsigned h): w(w), h(h), counts(w*h, 0) { }
-    void resize(unsigned w, unsigned h);
-    bool operator==(const CountMap& b) const { return w == b.w && h == b.h && counts == b.counts; }
-    unsigned value(unsigned x, unsigned y) const { return counts[y*w+x]; }
-    void increment(unsigned x, unsigned y) { ++counts[y*w+x]; }
+struct OffsetMap {
+    OffsetMap(unsigned w, unsigned h, vector<int> offsets): w(w), h(h), offsets(offsets) { }
+    OffsetMap(unsigned w, unsigned h): w(w), h(h), offsets(2*w*h, 0) { }
+    bool operator==(const OffsetMap& b) const { return w == b.w && h == b.h && offsets == b.offsets; }
+    void set(unsigned x, unsigned y, int dx, int dy) { offsets[2*((h - 1 - y)*w+x)] = dx; offsets[2*((h - 1 - y)*w+x)+1] = dy; }
+    int dx(unsigned x, unsigned y) const { return offsets[2*(y*w+x)]; }
+    int dy(unsigned x, unsigned y) const { return offsets[2*(y*w+x)+1]; }
 
     unsigned w;
     unsigned h;
-    vector<int> counts;
+    vector<int> offsets;
 };
 
-CountMap::CountMap(vector<string> counts): 
-    w(counts[0].size()), h(counts.size()), counts(w*h, 0) {
-    this->counts.resize(w*h, 0);
-    for (unsigned j = 0; j < h; ++j) {
-        for (unsigned i = 0; i < w; ++i) {
-            this->counts[j*w+i] = counts[h - 1 - j][i] - '0'; // humans work upside down
+std::ostream& operator<<(std::ostream& out, const OffsetMap& map) {
+    for (unsigned j = map.h - 1; (int)j >= 0; --j) {
+        for (unsigned i = 0; i < map.w; ++i) {
+            int dx = map.dx(i, j);
+            int dy = map.dy(i, j);
+            out << format("(% d,% d)") % dx % dy;
         }
-    }
-}
-
-std::ostream& operator<<(std::ostream& out, const CountMap& map) {
-    for (int j = (int)map.h - 1; j >= 0; --j) {
-        for (int i = 0; i < (int)map.w; ++i) {
-            char str[2] = { ('0' + map.value(i, j)), '\0' };
-            out << str;
-        }
-        out << std::endl;
+        out << endl;
     }
     return out;
 }
+
+// -------------------------------------------------
+
+struct CountMap {
+    CountMap(vector<string> counts): w(counts[0].size()), h(counts.size()), counts(counts) { }
+    CountMap(unsigned w, unsigned h): w(w), h(h), counts(h, string(w, '0')) { }
+    bool operator==(const CountMap& b) const { return w == b.w && h == b.h && counts == b.counts; }
+    char value(unsigned x, unsigned y) const { return counts[y][x]; }
+    void increment(unsigned x, unsigned y) { ++counts[h - 1 - y][x]; }
+
+    unsigned w;
+    unsigned h;
+    vector<string> counts;
+};
+
+std::ostream& operator<<(std::ostream& out, const CountMap& map) {
+    BOOST_FOREACH(string row, map.counts) {
+        BOOST_FOREACH(char c, row)
+            out << c;
+        out << endl;
+    }
+    return out;
+}
+
 // -------------------------------------------------
 
 struct Cell {
@@ -98,6 +114,7 @@ struct Map {
     vector<Cell> cells;
     CountMap opaque_count_map;
     CountMap apply_count_map;
+    OffsetMap offset_map;
 };
 
 Map::Map(const vector<string>& raster):
@@ -105,7 +122,8 @@ Map::Map(const vector<string>& raster):
     h(raster.size()),
     cells(w*h),
     opaque_count_map(w, h),
-    apply_count_map(w, h)
+    apply_count_map(w, h),
+    offset_map(w, h)
 {
     for (unsigned i = 0; i < w; ++i) {
         for (unsigned j = 0; j < h; ++j) {
@@ -120,7 +138,8 @@ Map::Map(const Map& map):
     h(map.h),
     cells(map.cells),
     opaque_count_map(map.opaque_count_map),
-    apply_count_map(map.apply_count_map) {
+    apply_count_map(map.apply_count_map),
+    offset_map(map.offset_map) {
 }
 
 bool Map::is_opaque(unsigned x, unsigned y) {
@@ -143,6 +162,14 @@ ostream& operator<<(ostream& out, const Map& map) {
 }
 
 // -------------------------------------------------
+
+static void apply_record_offsets(void *map, int x, int y, int dx, int dy, void *src) {
+    Map *m = static_cast<Map *>(map);
+    if (!m->is_on_map(x, y))
+        return;
+    m->offset_map.set(x, y, dx, dy);
+    m->apply(x, y);
+}
 
 static void apply_increment(void *map, int x, int y, int dx, int dy, void *src) {
     Map *m = static_cast<Map *>(map);
@@ -347,8 +374,7 @@ BOOST_AUTO_TEST_SUITE(test_suite1)
             ("0111211000")
             ("0111211100")
             ("0000000000");
-        const int px = 4;
-        const int py = 4;
+        const int px = 4, py = 4;
         const unsigned radius = 3;
         fov_settings_type *settings = new_settings(FOV_SHAPE_SQUARE);
         BOOST_FOREACH(BasicCase c, cases) {
@@ -409,8 +435,7 @@ BOOST_AUTO_TEST_SUITE(test_suite1)
             ("000011121110000")
             ("000000000000000")
             ("000000000000000");
-        const int px = 7;
-        const int py = 7;
+        const int px = 7, py = 7;
         const unsigned radius = 6;
         test_count_maps(Map(raster), CountMap(expected_opaque), CountMap(expected_apply), px, py, radius, FOV_SHAPE_CIRCLE);
     }
@@ -464,8 +489,7 @@ BOOST_AUTO_TEST_SUITE(test_suite1)
             ("000001121100000")
             ("000000000000000")
             ("000000000000000");
-        const int px = 7;
-        const int py = 7;
+        const int px = 7, py = 7;
         const unsigned radius = 6;
         test_count_maps(Map(raster), CountMap(expected_opaque), CountMap(expected_apply), px, py, radius, FOV_SHAPE_OCTAGON);
     }
@@ -486,8 +510,7 @@ BOOST_AUTO_TEST_SUITE(test_suite1)
             ("211111111111111111111111111111")
             ("022222222222222222222222222222")
             ("211111111111111111111111111111");
-        const int px = 0;
-        const int py = 1;
+        const int px = 0, py = 1;
         const unsigned radius = 40;
         test_count_maps(Map(raster), CountMap(expected_opaque), CountMap(expected_apply), px, py, radius, FOV_SHAPE_SQUARE);
     }
@@ -541,8 +564,7 @@ BOOST_AUTO_TEST_SUITE(test_suite1)
             ("000000000111111")
             ("000000000001111")
             ("000000000000011");
-        const int px = 0;
-        const int py = 7;
+        const int px = 0, py = 7;
         const unsigned radius = 20;
         const fov_direction_type direction = FOV_EAST;
         const float angle = 45.0f;
@@ -598,8 +620,7 @@ BOOST_AUTO_TEST_SUITE(test_suite1)
             ("000000000111111")
             ("000000000001111")
             ("000000000000011");
-        const int px = 0;
-        const int py = 7;
+        const int px = 0, py = 7;
         int radius;
         const fov_direction_type direction = FOV_EAST;
         const float angle = 45.0f;
@@ -673,12 +694,33 @@ BOOST_AUTO_TEST_SUITE(test_suite1)
             ("000000000001111")
             ("000000000000011");
         const unsigned radius = 20;
-        const int px = 0;
-        const int py = 7;
+        const int px = 0, py = 7;
         const fov_direction_type direction = FOV_EAST;
         const float angle = 45.0f;
         test_count_maps_beam(Map(raster), CountMap(expected_opaque), CountMap(expected_apply), px, py, radius, FOV_SHAPE_SQUARE, direction, angle);
     }
 
+    BOOST_AUTO_TEST_CASE(offsets) {
+        vector<string> raster = list_of
+            ("...")
+            (".@.")
+            ("...");
+        vector<int> expected_offsets = list_of
+            (-1)(-1) ( 0)(-1) ( 1)( 1)
+            (-1)( 0) ( 0)( 0) ( 1)( 0)
+            (-1)(-1) ( 0)( 0) ( 1)( 1); // dx = 2*(y*w + x), dy = 2*(y*w + x) + 1
+        OffsetMap om(3, 3, expected_offsets);
+        Map map(raster);
+        int px = 1, py = 1;
+        unsigned radius = 3;
+        fov_settings_type settings;
+        fov_settings_init(&settings);
+        fov_settings_set_opacity_test_function(&settings, opaque_increment);
+        fov_settings_set_apply_lighting_function(&settings, apply_record_offsets);
+        fov_circle(&settings, &map, NULL, px, py, radius);
+        cout << map.offset_map;
+        fov_settings_free(&settings);
+        BOOST_CHECK(map.offset_map == om);
+    }
 
 BOOST_AUTO_TEST_SUITE_END()
