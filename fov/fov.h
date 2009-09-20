@@ -82,14 +82,22 @@ typedef struct {
 
     /** Shape setting. */
     fov_shape_type shape;
+
+    /** Whether to peek around corners. */
     fov_corner_peek_type corner_peek;
+
+    /** Whether to call apply on opaque tiles. */
     fov_opaque_apply_type opaque_apply;
 
-    /* Pre-calculated data. */
+    /** \cond INTERNAL */
+
+    /** Pre-calculated data. \internal */
     /*@null@*/ height_array_t *heights;
 
-    /* Size of pre-calculated data. */
+    /** Size of pre-calculated data. \internal */
     unsigned numheights;
+
+    /** \endcond */
 } fov_settings_type;
 
 /** The opposite direction to that given. */
