@@ -64,6 +64,7 @@ Slope from @ to X
 
 /* Types ---------------------------------------------------------- */
 
+/** \cond INTERNAL */
 typedef struct {
     /*@observer@*/ fov_settings_type *settings;
     /*@observer@*/ void *map;
@@ -72,6 +73,7 @@ typedef struct {
     int source_y;
     unsigned radius;
 } fov_private_data_type;
+/** \endcond */
 
 /* Options -------------------------------------------------------- */
 
@@ -250,7 +252,7 @@ static float fov_slope(float dx, float dy) {
                                                                                                 \
             if (settings->opaque(data->map, x, y)) {                                            \
                 if (settings->opaque_apply == FOV_OPAQUE_APPLY && (apply_edge || dy > 0)) {     \
-                    settings->apply(data->map, x, y, dx, dy, data->source);                     \
+                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y, data->source);         \
                 }                                                                               \
                 if (prev_blocked == 0) {                                                        \
                     end_slope_next = fov_slope((float)dx + 0.5f, (float)dy - 0.5f);             \
@@ -259,7 +261,7 @@ static float fov_slope(float dx, float dy) {
                 prev_blocked = 1;                                                               \
             } else {                                                                            \
                 if (apply_edge || dy > 0) {                                                     \
-                    settings->apply(data->map, x, y, dx, dy, data->source);                     \
+                    settings->apply(data->map, x, y, x - data->source_x, y - data->source_y, data->source);         \
                 }                                                                               \
                 if (prev_blocked == 1) {                                                        \
                     start_slope = fov_slope((float)dx - 0.5f, (float)dy - 0.5f);                \
