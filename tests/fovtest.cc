@@ -43,7 +43,7 @@ struct OffsetMap {
     OffsetMap(unsigned w, unsigned h, vector<int> offsets): w(w), h(h), offsets(offsets) { }
     OffsetMap(unsigned w, unsigned h): w(w), h(h), offsets(2*w*h, 0) { }
     bool operator==(const OffsetMap& b) const { return w == b.w && h == b.h && offsets == b.offsets; }
-    void set(unsigned x, unsigned y, int dx, int dy) { offsets[2*((h - 1 - y)*w+x)] = dx; offsets[2*((h - 1 - y)*w+x)+1] = dy; }
+    void set(unsigned x, unsigned y, int dx, int dy) { offsets[2*(y*w+x)] = dx; offsets[2*(y*w+x)+1] = dy; }
     int dx(unsigned x, unsigned y) const { return offsets[2*(y*w+x)]; }
     int dy(unsigned x, unsigned y) const { return offsets[2*(y*w+x)+1]; }
 
@@ -53,7 +53,7 @@ struct OffsetMap {
 };
 
 std::ostream& operator<<(std::ostream& out, const OffsetMap& map) {
-    for (unsigned j = map.h - 1; (int)j >= 0; --j) {
+    for (unsigned j = 0; j < map.h; ++j) {
         for (unsigned i = 0; i < map.w; ++i) {
             int dx = map.dx(i, j);
             int dy = map.dy(i, j);
@@ -702,23 +702,27 @@ BOOST_AUTO_TEST_SUITE(test_suite1)
 
     BOOST_AUTO_TEST_CASE(offsets) {
         vector<string> raster = list_of
-            ("...")
-            (".@.")
-            ("...");
+            (".....")
+            (".....")
+            ("..@..")
+            (".....")
+            (".....");
+        // dx = 2*(y*w + x), dy = 2*(y*w + x) + 1
         vector<int> expected_offsets = list_of
-            (-1)(-1) ( 0)(-1) ( 1)( 1)
-            (-1)( 0) ( 0)( 0) ( 1)( 0)
-            (-1)(-1) ( 0)( 0) ( 1)( 1); // dx = 2*(y*w + x), dy = 2*(y*w + x) + 1
-        OffsetMap expected_offset_map(3, 3, expected_offsets);
+            (-2)(-2) (-1)(-2) ( 0)(-2) ( 1)(-2) ( 2)(-2)
+            (-2)(-1) (-1)(-1) ( 0)(-1) ( 1)(-1) ( 2)(-1)
+            (-2)( 0) (-1)( 0) ( 0)( 0) ( 1)( 0) ( 2)( 0)
+            (-2)( 1) (-1)( 1) ( 0)( 1) ( 1)( 1) ( 2)( 1)
+            (-2)( 2) (-1)( 2) ( 0)( 2) ( 1)( 2) ( 2)( 2);
+        OffsetMap expected_offset_map(5, 5, expected_offsets);
         Map map(raster);
-        int px = 1, py = 1;
+        int px = 2, py = 2;
         unsigned radius = 3;
         fov_settings_type settings;
         fov_settings_init(&settings);
         fov_settings_set_opacity_test_function(&settings, opaque_increment);
         fov_settings_set_apply_lighting_function(&settings, apply_record_offsets);
         fov_circle(&settings, &map, NULL, px, py, radius);
-        cout << map.offset_map;
         fov_settings_free(&settings);
         BOOST_CHECK(map.offset_map == expected_offset_map);
     }
