@@ -2,6 +2,7 @@
 SUBDIRS = fov tests examples docs
 CLEANFILES = *~
 EXTRA_DIST=autogen.sh
+ACLOCAL_AMFLAGS=-I m4
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libfov.pc

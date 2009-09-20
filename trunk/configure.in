@@ -7,6 +7,7 @@ dnl -----------------------------------------------
 
 AC_INIT(fov/fov.h)
 AM_CONFIG_HEADER(fov/config.h)
+AC_CONFIG_MACRO_DIR([m4])
 AC_REVISION([$Revision$])
 AC_CANONICAL_SYSTEM
 

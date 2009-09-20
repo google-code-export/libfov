@@ -8,7 +8,7 @@ all:
 endif
 
 html: @top_srcdir@/fov/fov.h Doxyfile Doxyheader.html Doxyfooter.html doxygen.css
-	(cat Doxyfile; echo "PROJECT_NUMBER=@LIBFOV_RELEASE@") | doxygen -
+	(cat Doxyfile; echo "PROJECT_NUMBER=@LIBFOV_RELEASE@") | doxygen - > /dev/null
 
 clean:
 	$(RM) -r html *~
