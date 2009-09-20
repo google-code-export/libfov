@@ -23,7 +23,7 @@ LIBFOV_LIBRARY_NAME=fov
 
 # Release versioning. This is a straight -version-info libtool library
 # (no -release).
-LIBFOV_RELEASE=1.0.3
+LIBFOV_RELEASE=1.0.4
 # x.y.z where release procedure is:
 #   - Increment z.
 #   - If interfaces have changed destroying backwards compatibility,
@@ -32,7 +32,7 @@ LIBFOV_RELEASE=1.0.3
 #     and z to 0. (subjective / marketing version number)
 
 # Shared library versioning (must conform to libtool's versioning scheme)
-LIBFOV_LTVERSION=1:1:0
+LIBFOV_LTVERSION=1:2:0
 #                | | |
 #         +------+ | +---+
 #         |        |     |
